@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  font-family: Arial, sans-serif;
+}
+.container {
+  position: relative;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  background-color: gray;
+  width: 400px;
+  height: 80vh;
+}
+
+.city {
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__name {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: white;
+  }
+
+  &__temp {
+    margin-top: 1rem;
+    font-size: 3.5rem;
+    color: white;
+  }
+
+  &__desc {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    color: white;
+  }
+
+  &__temp-range {
+    margin-top: 0.7rem;
+    display: flex;
+    gap: 0.3rem;
+  }
+
+  &__temp-high {
+    font-size: 1.1rem;
+    color: white;
+  }
+
+  &__temp-low {
+    font-size: 1.1rem;
+    color: white;
+  }
+}

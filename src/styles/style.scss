@@ -1,3 +1,7 @@
+@use "mixin" as *;
+@use "variables" as *;
+@use "sass:color";
+
 * {
   margin: 0;
   padding: 0;
@@ -5,43 +9,56 @@
 }
 
 body {
+  font-family: $font-family;
   height: 100vh;
-  background-color: black;
+  background-color: color.scale($background, $lightness: 20%);
   display: flex;
-  font-family: Arial, sans-serif;
+  justify-content: center;
+  align-items: center;
+
+  @include largScreens {
+    justify-content: center;
+    align-items: center;
+  }
 }
 .container {
   position: relative;
   margin: auto;
+  width: 100vw;
+  height: 100vh;
+  box-shadow: $shadow;
+
   display: flex;
   justify-content: center;
-  background-color: gray;
-  width: 400px;
-  height: 80vh;
+  background-color: $secondary-color;
+
+  @include largScreens {
+    width: 400px;
+    height: 80vh;
+    border-radius: $border-radius;
+  }
 }
 
 .city {
-  margin-top: 5rem;
+  margin-top: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: $text-color;
 
   &__name {
     font-size: 1.6rem;
     font-weight: bold;
-    color: white;
   }
 
   &__temp {
     margin-top: 1rem;
     font-size: 3.5rem;
-    color: white;
   }
 
   &__desc {
     margin-top: 1rem;
     font-size: 1.25rem;
-    color: white;
   }
 
   &__temp-range {
@@ -52,11 +69,9 @@ body {
 
   &__temp-high {
     font-size: 1.1rem;
-    color: white;
   }
 
   &__temp-low {
     font-size: 1.1rem;
-    color: white;
   }
 }

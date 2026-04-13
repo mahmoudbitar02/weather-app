@@ -29,7 +29,7 @@ body {
   box-shadow: $shadow;
 
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   background-color: $secondary-color;
 
   @include largScreens {

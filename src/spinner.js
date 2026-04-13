@@ -1,7 +1,7 @@
 import { container } from "./main";
 
 export function showSpinner(city) {
-  container.innerHTML = getSpinnerHTML(city);
+  //   container.innerHTML = getSpinnerHTML(city);
 }
 
 function getSpinnerHTML(city) {

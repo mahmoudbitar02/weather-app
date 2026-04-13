@@ -1,0 +1,47 @@
+@use "variables" as *;
+@use "sass:color";
+.today-forcast {
+  margin: 2rem auto;
+  padding: 1rem;
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid $text-color;
+  border-radius: $border-radius;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 95%;
+  height: fit-content;
+  color: $text-color;
+
+  &__header {
+    align-items: center;
+    color: $text-color;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid $text-color;
+  }
+
+  &__condation {
+    font-size: $font-size-medium;
+  }
+
+  &__wind {
+    font-size: $font-size-medium;
+  }
+
+  &__data {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  &__item {
+    margin-top: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    gap: 0.5rem;
+  }
+}

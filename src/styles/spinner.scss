@@ -1,6 +1,5 @@
 @use "variables" as *;
 .spinner {
-  position: relative;
   width: 100%;
 
   &__icon {
@@ -14,10 +13,6 @@
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
-
-    &.hiddene {
-      display: none;
-    }
   }
 
   &__text {
@@ -29,10 +24,6 @@
     font-size: 1.25rem;
     width: 100%;
     text-align: center;
-
-    &.hiddene {
-      display: none;
-    }
   }
 
   @keyframes spin {

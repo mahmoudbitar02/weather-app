@@ -33,7 +33,7 @@ body {
   background-color: $secondary-color;
 
   @include largScreens {
-    width: 400px;
+    width: 420px;
     height: 80vh;
     border-radius: $border-radius;
   }

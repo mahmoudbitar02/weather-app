@@ -12,12 +12,13 @@ export async function displayWeather(city) {
 }
 
 async function getTodayForcastHTML(data) {
-  console.log("hallo " + data.location.localtime);
+  console.log("hallo " + data.location.name);
 
   const now = new Date(data.location.localtime);
   console.log(now);
   const forcastDayOne = data.forecast.forecastday[0].hour;
   const forcastDayTwo = data.forecast.forecastday[1].hour;
+
   const forcastCondition = data.forecast.forecastday[0].day.condition.text;
   const maxWindPerKm = data.forecast.forecastday[0].day.maxwind_kph;
 
@@ -31,26 +32,7 @@ async function getTodayForcastHTML(data) {
 
   renderTodayForcastHeader(forcastCondition, maxWindPerKm);
 
-  const itemsHTML = nextHours
-    .map((hour, index) => {
-      const hourTime = hour.time.split(" ")[1].split(":")[0];
-      const hourTemp = hour.temp_c;
-      const hourIcon = hour.condition.icon;
-
-      const hourTimeLabel = index === 0 ? "Jetzt" : `${hourTime} Uhr`;
-      return renderHoursAndTemp(hourTimeLabel, hourTemp, hourIcon);
-    })
-    .join("");
-
-  const html = `
-        <div class="today-forcast">
-            ${renderTodayForcastHeader(forcastCondition, maxWindPerKm)}
-            <div class="today-forcast__data">
-                ${itemsHTML}
-            </div>
-        </div>
-    `;
-  container.innerHTML += html;
+  AppendHourlyForcastToContainet(nextHours, forcastCondition, maxWindPerKm);
 }
 
 function getWeatherHTML(data) {
@@ -88,4 +70,27 @@ function renderTodayForcastHeader(condition, maxWind) {
             <span class="today-forcast__wind">Wind bis zu ${maxWind} km/h</span>
         </div>
     `;
+}
+
+function AppendHourlyForcastToContainet(nextHours, forcastCondition, maxWindPerKm) {
+  const itemsHTML = nextHours
+    .map((hour, index) => {
+      const hourTime = hour.time.split(" ")[1].split(":")[0];
+      const hourTemp = hour.temp_c;
+      const hourIcon = hour.condition.icon;
+
+      const hourTimeLabel = index === 0 ? "Jetzt" : `${hourTime} Uhr`;
+      return renderHoursAndTemp(hourTimeLabel, hourTemp, hourIcon);
+    })
+    .join("");
+
+  const html = `
+        <div class="today-forcast">
+            ${renderTodayForcastHeader(forcastCondition, maxWindPerKm)}
+            <div class="today-forcast__data">
+                ${itemsHTML}
+            </div>
+        </div>
+    `;
+  container.innerHTML += html;
 }

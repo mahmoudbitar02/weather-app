@@ -38,13 +38,23 @@
   }
 }
 
-.days-forecast-card__item {
+.days-forecast-card {
   @include cardHeader();
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 
   &:last-child {
     border-bottom: none;
+    padding: 0;
+  }
+
+  &__title {
+    width: 2rem;
+  }
+
+  &__icon {
+    width: 3rem;
   }
 }

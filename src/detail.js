@@ -110,7 +110,7 @@ function appendForecast3Days(data) {
 
       return `
   
-    <div class="days-forecast-card__item">
+    <div class="days-forecast-card">
       <h3 class="days-forecast-card__title">${title}</h3>
       <img src="https:${day.day.condition.icon}" alt="" class="days-forecast-card__icon" />
       <span class="days-forecast-card__maxtemp">H:${formatTemperature(day.day.maxtemp_c)}</span>

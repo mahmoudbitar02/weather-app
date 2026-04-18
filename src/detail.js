@@ -9,20 +9,22 @@ export async function displayWeather(city) {
 
   getWeatherHTML(data);
   getTodayForcastHTML(data);
+  appendForecast3Days(data);
 }
 
-async function getTodayForcastHTML(data) {
+function getTodayForcastHTML(data) {
   console.log("hallo " + data.location.name);
 
   const now = new Date(data.location.localtime);
   console.log(now);
-  const forcastDayOne = data.forecast.forecastday[0].hour;
-  const forcastDayTwo = data.forecast.forecastday[1].hour;
+  const forecastDayOne = data.forecast.forecastday[0].hour;
+  const forecastDayTwo = data.forecast.forecastday[1].hour;
 
+  // Data day 1
   const forcastCondition = data.forecast.forecastday[0].day.condition.text;
   const maxWindPerKm = data.forecast.forecastday[0].day.maxwind_kph;
 
-  const allHours = [...forcastDayOne, ...forcastDayTwo];
+  const allHours = [...forecastDayOne, ...forecastDayTwo];
   const nextHours = allHours
     .filter((hour) => {
       const hourTime = new Date(hour.time);
@@ -30,9 +32,7 @@ async function getTodayForcastHTML(data) {
     })
     .slice(0, 24);
 
-  renderTodayForcastHeader(forcastCondition, maxWindPerKm);
-
-  AppendHourlyForcastToContainet(nextHours, forcastCondition, maxWindPerKm);
+  appendHourlyForecastToContainer(nextHours, forcastCondition, maxWindPerKm);
 }
 
 function getWeatherHTML(data) {
@@ -46,7 +46,7 @@ function getWeatherHTML(data) {
           <span class="city__temp-high">H: ${formatTemperature(forcast.day.maxtemp_c)}</span>
           <span class="city__temp-low">L: ${formatTemperature(forcast.day.mintemp_c)}</span>
         </div> 
-        <div class="city">
+    </div>
     
   `;
   container.innerHTML = html;
@@ -54,25 +54,25 @@ function getWeatherHTML(data) {
 
 function renderHoursAndTemp(hour, temp, icon) {
   return `
-  <div class="today-forcast__item">
-              <span class="today-forcast__time">${hour} </span>
-              <img class="today-forcast__icon" src="https:${icon}" alt="Weather icon" />
-              <span class="today-forcast__temp">${formatTemperature(temp)}</span>
-            </div>
+    <div class="today-forcast__item">
+      <span class="today-forcast__time">${hour} </span>
+      <img class="today-forcast__icon" src="https:${icon}" alt="Weather icon" />
+      <span class="today-forcast__temp">${formatTemperature(temp)}</span>
+    </div>
     
   `;
 }
 
 function renderTodayForcastHeader(condition, maxWind) {
   return `
-        <div class="today-forcast__header">
-            <span class="today-forcast__condation">Heute ${condition}.</span>
-            <span class="today-forcast__wind">Wind bis zu ${maxWind} km/h</span>
-        </div>
+    <div class="today-forcast__header">
+      <span class="today-forcast__condation">Heute ${condition}.</span>
+      <span class="today-forcast__wind">Wind bis zu ${maxWind} km/h</span>
+    </div>
     `;
 }
 
-function AppendHourlyForcastToContainet(nextHours, forcastCondition, maxWindPerKm) {
+function appendHourlyForecastToContainer(nextHours, forcastCondition, maxWindPerKm) {
   const itemsHTML = nextHours
     .map((hour, index) => {
       const hourTime = hour.time.split(" ")[1].split(":")[0];
@@ -92,5 +92,42 @@ function AppendHourlyForcastToContainet(nextHours, forcastCondition, maxWindPerK
             </div>
         </div>
     `;
-  container.innerHTML += html;
+  container.insertAdjacentHTML("beforeend", html);
+}
+
+function appendForecast3Days(data) {
+  const days = data.forecast.forecastday.slice(0, 3);
+  console.log(days);
+
+  const innerHtml = days
+    .map((day, index) => {
+      const title =
+        index === 0
+          ? "Heute"
+          : new Date(day.date).toLocaleDateString("de-DE", {
+              weekday: "short",
+            });
+
+      return `
+  
+    <div class="days-forecast-card__item">
+      <h3 class="days-forecast-card__title">${title}</h3>
+      <img src="https:${day.day.condition.icon}" alt="" class="days-forecast-card__icon" />
+      <span class="days-forecast-card__maxtemp">H:${formatTemperature(day.day.maxtemp_c)}</span>
+      <span class="days-forecast-card__mintemp">T:${formatTemperature(day.day.mintemp_c)}</span>
+      <p class="days-forecast-card__wind">${day.day.maxwind_kph} km/h</p>
+    </div>
+  
+  `;
+    })
+    .join("");
+
+  const html = `
+    <div class="days-forecast">
+      <h3 class="days-forecast__title">Vorhersage für die nächsten 3 Tage</h3>
+      ${innerHtml}
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", html);
 }

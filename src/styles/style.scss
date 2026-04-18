@@ -16,6 +16,10 @@ body {
   justify-content: center;
   align-items: center;
 
+  ::-webkit-scrollbar {
+    scrollbar-width: none;
+  }
+
   @include largScreens {
     justify-content: center;
     align-items: center;
@@ -31,6 +35,7 @@ body {
   display: flex;
   flex-direction: column;
   background-color: $secondary-color;
+  overflow: auto;
 
   @include largScreens {
     width: 420px;
@@ -40,7 +45,8 @@ body {
 }
 
 .city {
-  margin-top: 3rem;
+  margin-top: 2rem;
+
   display: flex;
   flex-direction: column;
   align-items: center;

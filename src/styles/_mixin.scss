@@ -1,5 +1,29 @@
+@use "variables" as *;
 @mixin largScreens {
   @media screen and (min-width: 600px) {
     @content;
   }
+}
+
+@mixin card {
+  margin: 1rem auto;
+  padding: 1rem;
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(50px);
+  border: 1px solid $text-color;
+  border-radius: $border-radius;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 95%;
+  height: fit-content;
+  color: $text-color;
+}
+
+@mixin cardHeader {
+  align-items: center;
+  color: $text-color;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid $text-color;
 }

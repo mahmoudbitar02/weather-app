@@ -1,26 +1,10 @@
 @use "variables" as *;
 @use "sass:color";
+@use "mixin" as *;
 .today-forcast {
-  margin: 0rem auto;
-  padding: 1rem;
-
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-
-  border: 1px solid $text-color;
-  border-radius: $border-radius;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 95%;
-  height: fit-content;
-  color: $text-color;
-
+  @include card();
   &__header {
-    align-items: center;
-    color: $text-color;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid $text-color;
+    @include cardHeader();
   }
 
   &__condation {
@@ -43,5 +27,24 @@
     align-items: center;
     min-width: 60px;
     gap: 0.5rem;
+  }
+}
+
+.days-forecast {
+  @include card();
+
+  &__title {
+    @include cardHeader();
+  }
+}
+
+.days-forecast-card__item {
+  @include cardHeader();
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:last-child {
+    border-bottom: none;
   }
 }

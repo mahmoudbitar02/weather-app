@@ -2,6 +2,7 @@
 @use "sass:color";
 @use "mixin" as *;
 .today-forcast {
+  margin: 1rem;
   @include card();
   &__header {
     @include cardHeader();
@@ -32,6 +33,7 @@
 
 .days-forecast {
   @include card();
+  margin: 1rem;
 
   &__title {
     @include cardHeader();
@@ -56,5 +58,18 @@
 
   &__icon {
     width: 3rem;
+  }
+}
+
+.mini-card {
+  margin: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  .mini-card-item {
+    @include card();
+    align-items: center;
+    justify-content: center;
+    height: 150px;
   }
 }

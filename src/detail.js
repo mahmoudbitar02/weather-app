@@ -10,6 +10,7 @@ export async function displayWeather(city) {
   getWeatherHTML(data);
   getTodayForcastHTML(data);
   appendForecast3Days(data);
+  renderMiniCard(data);
 }
 
 function getTodayForcastHTML(data) {
@@ -128,6 +129,45 @@ function appendForecast3Days(data) {
       ${innerHtml}
     </div>
   `;
+
+  container.insertAdjacentHTML("beforeend", html);
+}
+
+function renderMiniCard(data) {
+  const stats = [
+    {
+      title: "Feuchtigkeit",
+      value: `${data.current.humidity}%`,
+    },
+    {
+      title: "Wind",
+      value: `${data.current.wind_kph} km/h`,
+    },
+    {
+      title: "Druck",
+      value: `${data.current.pressure_mb} hPa`,
+    },
+    {
+      title: "Gefühlt",
+      value: `${formatTemperature(data.current.feelslike_c)}`,
+    },
+  ];
+  const weiterStatistic = stats
+    .map((data, index) => {
+      return `
+      <div class="mini-card-item">
+        <p class="mini-card-item__title">${data.title}</p>
+        <p class="mini-card-item__text">${data.value}</p>
+      </div>
+    `;
+    })
+    .join("");
+
+  const html = `
+    <div class="mini-card">
+    ${weiterStatistic}
+    </div>
+    `;
 
   container.insertAdjacentHTML("beforeend", html);
 }

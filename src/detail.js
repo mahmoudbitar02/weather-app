@@ -1,7 +1,7 @@
 import { fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
 import { showSpinner } from "./spinner";
-import { formatTemperature } from "./utils";
+import { formatTemperature, getDeutschlandTime, getState } from "./utils";
 
 export async function displayWeather(city) {
   showSpinner(city);
@@ -134,30 +134,12 @@ function appendForecast3Days(data) {
 }
 
 function renderMiniCard(data) {
-  const stats = [
-    {
-      title: "Feuchtigkeit",
-      value: `${data.current.humidity}%`,
-    },
-    {
-      title: "Wind",
-      value: `${data.current.wind_kph} km/h`,
-    },
-    {
-      title: "Druck",
-      value: `${data.current.pressure_mb} hPa`,
-    },
-    {
-      title: "Gefühlt",
-      value: `${formatTemperature(data.current.feelslike_c)}`,
-    },
-  ];
-  const weiterStatistic = stats
-    .map((data, index) => {
+  const weiterStatistic = getState(data)
+    .map((state) => {
       return `
       <div class="mini-card-item">
-        <p class="mini-card-item__title">${data.title}</p>
-        <p class="mini-card-item__text">${data.value}</p>
+        <p class="mini-card-item__title">${state.title}</p>
+        <p class="mini-card-item__value">${state.value}</p>
       </div>
     `;
     })

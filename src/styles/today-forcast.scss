@@ -62,14 +62,20 @@
 }
 
 .mini-card {
-  margin: 0.5rem;
+  margin: 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
-  .mini-card-item {
-    @include card();
-    align-items: center;
-    justify-content: center;
-    height: 150px;
+  margin-bottom: 1rem;
+}
+
+.mini-card-item {
+  @include card();
+  align-items: center;
+  justify-content: center;
+  height: 125px;
+
+  &__value {
+    font-size: 1.5rem;
   }
 }

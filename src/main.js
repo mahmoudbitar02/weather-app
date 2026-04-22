@@ -5,4 +5,4 @@ import "./styles/today-forcast.scss";
 
 export const container = document.querySelector(".container");
 
-displayWeather("Kuwait");
+displayWeather("Mannheim");

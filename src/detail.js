@@ -1,7 +1,8 @@
+import { getConditionImagePath } from "./conditions";
 import { fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
 import { showSpinner } from "./spinner";
-import { formatTemperature, getDeutschlandTime, getState } from "./utils";
+import { containerBackground, formatTemperature, getDeutschlandTime, getState } from "./utils";
 
 export async function displayWeather(city) {
   showSpinner(city);
@@ -11,13 +12,13 @@ export async function displayWeather(city) {
   getTodayForcastHTML(data);
   appendForecast3Days(data);
   renderMiniCard(data);
+  containerBackground(data, container);
 }
 
 function getTodayForcastHTML(data) {
   console.log("hallo " + data.location.name);
 
   const now = new Date(data.location.localtime);
-  console.log(now);
   const forecastDayOne = data.forecast.forecastday[0].hour;
   const forecastDayTwo = data.forecast.forecastday[1].hour;
 
@@ -26,9 +27,11 @@ function getTodayForcastHTML(data) {
   const maxWindPerKm = data.forecast.forecastday[0].day.maxwind_kph;
 
   const allHours = [...forecastDayOne, ...forecastDayTwo];
+
   const nextHours = allHours
     .filter((hour) => {
       const hourTime = new Date(hour.time);
+
       return hourTime >= now - 1 * 60 * 60 * 1000;
     })
     .slice(0, 24);

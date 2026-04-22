@@ -1,3 +1,5 @@
+import { getConditionImagePath } from "./conditions";
+
 export function formatTemperature(temp) {
   return `${Math.round(temp)}°`;
 }
@@ -40,4 +42,14 @@ export function getState(data) {
     },
   ];
   return stats;
+}
+
+export function containerBackground(data, container) {
+  const imagePath = getConditionImagePath(data.current.condition.code, !data.current.is_day);
+  console.log(data.current.is_day);
+  console.log("Hellllllllllllo");
+
+  container.style.backgroundImage = `url(${imagePath})`;
+  container.style.backgroundSize = "cover";
+  container.style.backgroundPosition = "center";
 }

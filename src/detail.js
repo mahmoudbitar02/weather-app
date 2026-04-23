@@ -8,11 +8,11 @@ export async function displayWeather(city) {
   showSpinner(city);
   const data = await fetchWeatherForecastData(city);
 
+  containerBackground(data, container);
   getWeatherHTML(data);
   getTodayForcastHTML(data);
   appendForecast3Days(data);
   renderMiniCard(data);
-  containerBackground(data, container);
 }
 
 function getTodayForcastHTML(data) {

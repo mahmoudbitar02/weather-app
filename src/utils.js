@@ -46,10 +46,8 @@ export function getState(data) {
 
 export function containerBackground(data, container) {
   const imagePath = getConditionImagePath(data.current.condition.code, !data.current.is_day);
-  console.log(data.current.is_day);
-  console.log("Hellllllllllllo");
 
-  container.style.backgroundImage = `url(${imagePath})`;
+  container.style.background = `linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${imagePath})`;
   container.style.backgroundSize = "cover";
   container.style.backgroundPosition = "center";
 }

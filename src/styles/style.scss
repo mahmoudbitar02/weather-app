@@ -34,7 +34,7 @@ body {
 
   display: flex;
   flex-direction: column;
-  background-color: $secondary-color;
+
   overflow: auto;
 
   @include largScreens {
@@ -80,4 +80,58 @@ body {
   &__temp-low {
     font-size: 1.1rem;
   }
+}
+
+.main {
+  padding: 1rem;
+  color: $text-color;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.main-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: $font-size-xxlarge;
+  }
+
+  &__btn {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color: $text-color;
+    height: fit-content;
+    font-size: $font-size-large;
+    background-color: transparent;
+  }
+
+  &__search {
+    height: 1.9rem;
+    border-radius: $border-radius;
+    padding: 0.3rem;
+    border: none;
+  }
+}
+
+.main-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.city-card {
+  @include card();
+  background-image: url("/weather-app/conditionImages/day/sunny.jpg");
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

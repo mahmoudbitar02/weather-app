@@ -1,8 +1,10 @@
-import { displayWeather } from "./detail";
+import { displayWeather, getMainHtml } from "./detail";
 import "./styles/spinner.scss";
 import "./styles/style.scss";
 import "./styles/today-forcast.scss";
 
 export const container = document.querySelector(".container");
 
-// displayWeather("Berlin");
+// displayWeather("Kuwait");
+
+getMainHtml();

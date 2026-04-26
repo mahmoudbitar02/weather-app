@@ -5,7 +5,7 @@ import { showSpinner } from "./spinner";
 import { containerBackground, formatTemperature, getDeutschlandTime, getState } from "./utils";
 
 export async function displayWeather(city) {
-  showSpinner(city);
+  showSpinner(`lade Wetter für ${city} ...`);
   const data = await fetchWeatherForecastData(city);
 
   containerBackground(data, container);
@@ -156,54 +156,3 @@ function renderMiniCard(data) {
 
   container.insertAdjacentHTML("beforeend", html);
 }
-
-export function getMainHtml() {
-  const html = `
-    <div class="main">
-          <div class="main-header">
-            <div class="main-header__top">
-              <div class="main-header__title">Wetter</div>
-              <button class="main-header__btn">Bearbeiten</button>
-            </div>
-            <input type="text" placeholder="Nach Stadt suchen..." class="main-header__search" />
-          </div>
-
-          <div class="main-cards">
-          ${renderMainCards()}
-            
-          </div>
-    </div>
-  `;
-
-  container.innerHTML = html;
-}
-
-function renderMainCards() {
-  return `
-      <div class="city-card" data-id=> /// hier muss die id hizugefügt werden....
-      <div class="city-card__left">
-        <div class="city-card__left-main">
-          <div class="city-card__title">Mannheim</div>
-          <div class="city-card__location">Germany</div>
-        </div>
-        <div class="city-card__condition">Sonnig</div>
-      </div>
-      <div class="city-card__right">
-        <div class="city-card__temp">22°</div>
-        <div class="city-card__temps">
-          <span class="city-card__temp-heigt">H:21°</span>
-          <span class="city-card__temp-low">T:12°</span>
-        </div>
-      </div>
-    </div>
-    `;
-}
-
-// async function search(city = "Kuwait") {
-//   const response = await fetch(`http://api.weatherapi.com/v1/search.json?key=0abd99540d1a49c8a81185605260904&q=${city}`);
-//   const data = await response.json();
-//   console.log(data);
-//   return data;
-// }
-
-// search();

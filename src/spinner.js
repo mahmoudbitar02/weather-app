@@ -1,14 +1,14 @@
 import { container } from "./main";
 
-export function showSpinner(city) {
-  container.innerHTML = getSpinnerHTML(city);
+export function showSpinner(message) {
+  container.innerHTML = getSpinnerHTML(message);
 }
 
-function getSpinnerHTML(city) {
+function getSpinnerHTML(message) {
   return `
     <div class="spinner">
       <div id="detail-spinner" class="spinner__icon "></div>
-      <div id="detail-spinner-text" class="spinner__text ">lade Wetterdaten für ${city}...</div>
+      <div id="detail-spinner-text" class="spinner__text ">${message}</div>
     </div>
     
     `;

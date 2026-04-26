@@ -1,6 +1,7 @@
 @use "variables" as *;
 @use "sass:color";
 @use "mixin" as *;
+
 .today-forcast {
   margin: 1rem;
   @include card();

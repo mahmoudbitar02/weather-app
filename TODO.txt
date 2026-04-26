@@ -1,0 +1,2 @@
+code refactring 
+utils.js --> function getBackgroundStyle und containerBackground machen fast das selbe, versuche sie in eine function zu machen.

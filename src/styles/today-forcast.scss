@@ -80,3 +80,14 @@
     font-size: 1.5rem;
   }
 }
+
+.action {
+  margin: 1rem 0;
+  display: flex;
+
+  &__back {
+    width: 3rem;
+    color: $text-color;
+    cursor: pointer;
+  }
+}

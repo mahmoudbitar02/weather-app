@@ -23,3 +23,10 @@
   padding-bottom: 0.9rem;
   border-bottom: 1px solid $text-color;
 }
+
+@mixin ellipse {
+  width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

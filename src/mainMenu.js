@@ -2,7 +2,10 @@ import { displayWeather } from "./detail";
 import { fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
 import { showSpinner } from "./spinner";
+
 import { containerBackground, formatTemperature, getBackgroundStyle } from "./utils";
+
+document.addEventListener("click", (e) => getMainEls(e));
 
 export function renderMainHtml() {
   showSpinner("lade Übersicht");
@@ -33,7 +36,7 @@ function renderMainHeader() {
 }
 
 async function renderMainCards() {
-  const favoriteCities = ["Mannheim", "Kuwait", "Homs", "Tokyo", "nyc", "peking"];
+  const favoriteCities = ["Mannheim", "Buchen", "nyc", "Kuwait"];
 
   const allCitiesElement = [];
 
@@ -75,5 +78,3 @@ function getMainEls(e) {
     displayWeather(city);
   }
 }
-
-document.addEventListener("click", (e) => getMainEls(e));

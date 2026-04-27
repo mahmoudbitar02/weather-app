@@ -53,7 +53,21 @@ function getWeatherHTML(data) {
     </div>
     
   `;
-  container.innerHTML = html;
+  container.innerHTML = getBackBtn() + html;
+}
+
+function getBackBtn() {
+  const backIcon = `
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+  </svg>
+`;
+
+  return `
+    <div class="action">
+      <div class="action__back">${backIcon} </div>
+    </div>
+  `;
 }
 
 function renderHoursAndTemp(hour, temp, icon) {
@@ -69,6 +83,7 @@ function renderHoursAndTemp(hour, temp, icon) {
 
 function renderTodayForcastHeader(condition, maxWind) {
   return `
+  
     <div class="today-forcast__header">
       <span class="today-forcast__condation">Heute ${condition}.</span>
       <span class="today-forcast__wind">Wind bis zu ${maxWind} km/h</span>

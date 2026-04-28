@@ -2,6 +2,7 @@ import { displayWeather } from "./detail";
 import { fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
 import { showSpinner } from "./spinner";
+import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
 
 import { containerBackground, formatTemperature, getBackgroundStyle } from "./utils";
 
@@ -36,14 +37,18 @@ function renderMainHeader() {
 }
 
 async function renderMainCards() {
-  const favoriteCities = ["Mannheim", "Buchen", "nyc", "Kuwait"];
+  let favoriteCities = getCityFromLocalStorag();
+
+  if (favoriteCities.length === 0) {
+    favoriteCities = ["Mannheim", "Buchen", "nyc", "Tokyo"];
+    setCityToLocalStorag(favoriteCities);
+  }
 
   const allCitiesElement = [];
 
   for (let city of favoriteCities) {
     const weatherData = await fetchWeatherForecastData(city, 1);
     const { location, current, forecast } = weatherData;
-    const cityCont = document.querySelectorAll(".city-card");
 
     const cityHtml = `
     <div class="city-card" data-city="${location.name}" style="${getBackgroundStyle(weatherData)}"> 

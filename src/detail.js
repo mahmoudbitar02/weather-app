@@ -1,6 +1,7 @@
 import { getConditionImagePath } from "./conditions";
 import { fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
+import { renderMainHtml } from "./mainMenu";
 import { showSpinner } from "./spinner";
 import { containerBackground, formatTemperature, getDeutschlandTime, getState } from "./utils";
 
@@ -54,6 +55,7 @@ function getWeatherHTML(data) {
     
   `;
   container.innerHTML = getBackBtn() + html;
+  handelBackClick();
 }
 
 function getBackBtn() {
@@ -170,4 +172,13 @@ function renderMiniCard(data) {
     `;
 
   container.insertAdjacentHTML("beforeend", html);
+}
+
+function handelBackClick() {
+  const backBtnEl = document.querySelector(".action__back");
+
+  backBtnEl.addEventListener("click", () => {
+    container.style.backgroundImage = "";
+    renderMainHtml();
+  });
 }

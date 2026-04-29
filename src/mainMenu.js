@@ -1,5 +1,5 @@
 import { displayWeather } from "./detail";
-import { fetchWeatherForecastData } from "./fetching";
+import { FetchSearchData, fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
 import { showSpinner } from "./spinner";
 import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
@@ -20,18 +20,23 @@ async function loadMain() {
         <div class="main-cards">
             ${await renderMainCards()} 
         </div>
+        
+
     </div>
+    
   `;
+  searchInput();
 }
 
 function renderMainHeader() {
   return `
     <div class="main-header">
         <div class="main-header__top">
-        <div class="main-header__title">Wetter</div>
-        <button class="main-header__btn">Bearbeiten</button>
+            <div class="main-header__title">Wetter</div>
+            <button class="main-header__btn">Bearbeiten</button>
         </div>
         <input type="text" placeholder="Nach Stadt suchen..." class="main-header__search" />
+        <div class="search"> </div>
   </div>
   `;
 }
@@ -39,10 +44,8 @@ function renderMainHeader() {
 async function renderMainCards() {
   let favoriteCities = getCityFromLocalStorag();
 
-  if (favoriteCities.length === 0) {
-    favoriteCities = ["Mannheim", "Buchen", "nyc", "Tokyo"];
-    setCityToLocalStorag(favoriteCities);
-  }
+  favoriteCities = ["Mannheim", "Buchen", "nyc"];
+  setCityToLocalStorag(favoriteCities);
 
   const allCitiesElement = [];
 
@@ -51,6 +54,8 @@ async function renderMainCards() {
     const { location, current, forecast } = weatherData;
 
     const cityHtml = `
+        
+
     <div class="city-card" data-city="${location.name}" style="${getBackgroundStyle(weatherData)}"> 
       <div class="city-card__left">
         <div class="city-card__left-main">
@@ -82,4 +87,45 @@ function getMainEls(e) {
 
     displayWeather(city);
   }
+}
+
+async function searchInput() {
+  const inputEl = document.querySelector(".main-header__search");
+  const searchContainer = document.querySelector(".search");
+
+  inputEl.addEventListener("input", async (e) => {
+    const inputCity = e.target.value.trim();
+    if (inputCity.length < 1) {
+      searchContainer.innerHTML = "";
+      return;
+    }
+    const results = await FetchSearchData(inputCity);
+    console.log(results);
+
+    renderSearchHtml(results);
+  });
+}
+
+function renderSearchHtml(results) {
+  const searchContainer = document.querySelector(".search");
+
+  const CityElements = [];
+
+  if (!results.length) {
+    searchContainer.innerHTML = "<p>Keine Ergebnisse</p>";
+    return;
+  }
+  const cityEl = results.forEach((city) => {
+    const html = `
+     <div class="search-item" data-cityId="${city.id}">
+          <span class="search-item__city"> ${city.name},</span>
+          <span class="search-item__city"> ${city.country},</span>
+          <span class="search-item__city"> ${city.region}</span>
+
+        </div>
+   
+    `;
+    CityElements.push(html);
+  });
+  searchContainer.innerHTML = `<div>${CityElements.join("")} </div>`;
 }

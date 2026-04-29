@@ -1,2 +1,40 @@
 code refactring 
 utils.js --> function getBackgroundStyle und containerBackground machen fast das selbe, versuche sie in eine function zu machen.
+
+
+
+async function searchInput() {
+  const inputEl = document.querySelector(".main-header__search");
+
+  inputEl.addEventListener("input", async (e) => {
+    const inputCityName = e.target.value.trim();
+    if (inputCityName.length < 2) return;
+
+    const results = await FetchSearchData(inputCityName);
+    console.log(inputCityName);
+    renderSearch(results);
+  });
+}
+
+function renderSearch(results) {
+  const main = document.querySelector(".main");
+
+  const html = `
+    <div class="search-results">
+      ${results
+        .map(
+          (city) => `
+        <div class="search-item" data-cityId="${city.id}">
+          ${city.name}, ${city.country}, ${city.id}
+        </div>
+      `,
+        )
+        .join("")}
+    </div>
+  `;
+
+  console.log("unten");
+  console.log(html);
+  console.log("oben");
+  main.insertAdjacentHTML("beforeend", html);
+}

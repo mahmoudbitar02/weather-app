@@ -9,3 +9,9 @@ export async function fetchWeatherForecastData(city, day = 3) {
   console.log(data);
   return data;
 }
+
+export async function FetchSearchData(cityName = "berlin") {
+  const response = await fetch(`${BASE_URL}/search.json?key=${KEY}&q=${cityName}`);
+  const data = await response.json();
+  return data;
+}

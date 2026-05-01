@@ -7,6 +7,7 @@ import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
 import { containerBackground, formatTemperature, getBackgroundStyle } from "./utils";
 
 document.addEventListener("click", (e) => getMainEls(e));
+document.addEventListener("click", (e) => searchedCity(e));
 
 export function renderMainHtml() {
   showSpinner("lade Übersicht");
@@ -44,7 +45,6 @@ function renderMainHeader() {
 async function renderMainCards() {
   let favoriteCities = getCityFromLocalStorag();
 
-  favoriteCities = ["Mannheim", "Buchen", "nyc"];
   setCityToLocalStorag(favoriteCities);
 
   const allCitiesElement = [];
@@ -101,6 +101,7 @@ async function searchInput() {
     }
     const results = await FetchSearchData(inputCity);
     console.log(results);
+    console.log(results[0].id);
 
     renderSearchHtml(results);
   });
@@ -117,7 +118,9 @@ function renderSearchHtml(results) {
   }
   const cityEl = results.forEach((city) => {
     const html = `
-     <div class="search-item" data-cityId="${city.id}">
+     <div class="search-item" data-id="${city.id}" data-name="${city.name}"
+            data-lat="${city.lat}"
+            data-lon="${city.lon}">
           <span class="search-item__city"> ${city.name},</span>
           <span class="search-item__city"> ${city.country},</span>
           <span class="search-item__city"> ${city.region}</span>
@@ -127,5 +130,16 @@ function renderSearchHtml(results) {
     `;
     CityElements.push(html);
   });
-  searchContainer.innerHTML = `<div>${CityElements.join("")} </div>`;
+  searchContainer.innerHTML = `<div class=searchd-city>${CityElements.join("")} </div>`;
+}
+
+function searchedCity(e) {
+  const cityEl = e.target.closest(".search-item");
+  if (cityEl) {
+    const cityName = cityEl.dataset.name;
+
+    console.log(cityName);
+
+    displayWeather(cityName);
+  }
 }

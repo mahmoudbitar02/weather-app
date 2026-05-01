@@ -84,10 +84,23 @@
 .action {
   margin: 1rem 0;
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 
   &__back {
     width: 3rem;
     color: $text-color;
     cursor: pointer;
   }
+
+  &__star {
+    margin-right: 1rem;
+    width: 3rem;
+    color: $text-color;
+    cursor: pointer;
+  }
+}
+
+.hidden {
+  display: none;
 }

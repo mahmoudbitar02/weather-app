@@ -1,15 +1,18 @@
 import { displayWeather } from "./detail";
 import { FetchSearchData, fetchWeatherForecastData } from "./fetching";
-import { container } from "./main";
 import { showSpinner } from "./spinner";
-import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
+import { formatTemperature, getBackgroundStyle } from "./utils";
 
-import { containerBackground, formatTemperature, getBackgroundStyle } from "./utils";
+import { deleteCityFromLocalStorage, getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
+import { container } from "./main";
 
 document.addEventListener("click", (e) => getMainEls(e));
 document.addEventListener("click", (e) => searchedCity(e));
+document.addEventListener("click", (e) => deleteCard(e));
 
 export function renderMainHtml() {
+  container.classList.remove("show-background");
+
   showSpinner("lade Übersicht");
   loadMain();
 }
@@ -17,16 +20,22 @@ export function renderMainHtml() {
 async function loadMain() {
   container.innerHTML = `
     <div class="main">
+          
+
         ${renderMainHeader()}
         <div class="main-cards">
+        
             ${await renderMainCards()} 
         </div>
         
+            
 
     </div>
     
+    
   `;
   searchInput();
+  handleEditButton();
 }
 
 function renderMainHeader() {
@@ -45,30 +54,41 @@ function renderMainHeader() {
 async function renderMainCards() {
   let favoriteCities = getCityFromLocalStorag();
 
-  setCityToLocalStorag(favoriteCities);
+  if (!favoriteCities || favoriteCities.length < 1) {
+    return "Noch keine Favoriten gespeichert";
+  }
 
   const allCitiesElement = [];
 
   for (let city of favoriteCities) {
     const weatherData = await fetchWeatherForecastData(city, 1);
     const { location, current, forecast } = weatherData;
+    const deleteIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>
+`;
 
     const cityHtml = `
-        
+       
+    <div class="main-cards__wrapper">
+      <button class="main-cards__delete-btn hidden" >${deleteIcon}</button>
+      
 
-    <div class="city-card" data-city="${location.name}" style="${getBackgroundStyle(weatherData)}"> 
-      <div class="city-card__left">
-        <div class="city-card__left-main">
-          <div class="city-card__title">${location.name}</div>
-          <div class="city-card__location">${location.country}</div>
+      <div class="city-card" data-city="${location.name}" style="${getBackgroundStyle(weatherData)}"> 
+        <div class="city-card__left">
+          <div class="city-card__left-main">
+            <div class="city-card__title">${location.name}</div>
+            <div class="city-card__location">${location.country}</div>
+          </div>
+          <div class="city-card__condition">${current.condition.text}</div>
         </div>
-        <div class="city-card__condition">${current.condition.text}</div>
-      </div>
-      <div class="city-card__right">
-        <div class="city-card__temp">${formatTemperature(forecast.forecastday[0].day.maxtemp_c)}</div>
-        <div class="city-card__temps">
-          <span class="city-card__temp-heigt">H:${formatTemperature(forecast.forecastday[0].day.maxtemp_c)}</span>
-          <span class="city-card__temp-low">T:${formatTemperature(forecast.forecastday[0].day.mintemp_c)}</span>
+        <div class="city-card__right">
+          <div class="city-card__temp">${formatTemperature(forecast.forecastday[0].day.maxtemp_c)}</div>
+          <div class="city-card__temps">
+            <span class="city-card__temp-heigt">H:${formatTemperature(forecast.forecastday[0].day.maxtemp_c)}</span>
+            <span class="city-card__temp-low">T:${formatTemperature(forecast.forecastday[0].day.mintemp_c)}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -109,10 +129,11 @@ async function searchInput() {
 
 function renderSearchHtml(results) {
   const searchContainer = document.querySelector(".search");
+  console.log(results);
 
   const CityElements = [];
 
-  if (!results.length) {
+  if (results.length === 0) {
     searchContainer.innerHTML = "<p>Keine Ergebnisse</p>";
     return;
   }
@@ -142,4 +163,29 @@ function searchedCity(e) {
 
     displayWeather(cityName);
   }
+}
+
+function handleEditButton() {
+  const editBtnEl = document.querySelector(".main-header__btn");
+  let isEditMode = false;
+  editBtnEl.addEventListener("click", () => {
+    isEditMode = !isEditMode;
+    editBtnEl.innerHTML = isEditMode ? "Fertig" : "Bearbeiten";
+    const deleteBtnEls = document.querySelectorAll(".main-cards__delete-btn");
+
+    deleteBtnEls.forEach((btn) => {
+      btn.classList.toggle("hidden");
+    });
+  });
+}
+
+function deleteCard(e) {
+  const deleteBtn = e.target.closest(".main-cards__delete-btn");
+  if (!deleteBtn) return;
+  const card = deleteBtn.closest(".main-cards__wrapper");
+  const cityName = card.querySelector(".city-card").dataset.city;
+  console.log(cityName);
+  deleteCityFromLocalStorage(cityName);
+  renderMainHtml();
+  // console.log(deleteBtn);
 }

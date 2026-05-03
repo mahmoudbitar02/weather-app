@@ -1,17 +1,20 @@
-import { list } from "postcss";
 import { getConditionImagePath } from "./conditions";
 import { fetchWeatherForecastData } from "./fetching";
 import { container } from "./main";
 import { renderMainHtml } from "./mainMenu";
 import { showSpinner } from "./spinner";
-import { getCityFromLocalStorag } from "./storage";
-import { containerBackground, formatTemperature, getDeutschlandTime, getState } from "./utils";
+import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
+import { formatTemperature, getDeutschlandTime, getState } from "./utils";
 
 export async function displayWeather(city) {
   showSpinner(`lade Wetter für ${city} ...`);
   const data = await fetchWeatherForecastData(city);
-
-  containerBackground(data, container);
+  const conditionImage = getConditionImagePath(data.current.condition.code, !data.current.is_day);
+  console.log(conditionImage);
+  if (conditionImage) {
+    container.style = `--detail-condition-image: url(${conditionImage})`;
+    container.classList.add("show-background");
+  }
   getWeatherHTML(data);
   getTodayForcastHTML(data);
   appendForecast3Days(data);
@@ -58,10 +61,11 @@ function getWeatherHTML(data) {
     </div>
     
   `;
-  container.innerHTML = getBackBtn() + html;
+  const isFavorite = getCityFromLocalStorag().find((city) => city === data.location.name);
+  container.innerHTML = getBackBtn(isFavorite) + html;
 }
 
-function getBackBtn() {
+function getBackBtn(isFavorite = false) {
   const backIcon = `
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -76,7 +80,7 @@ function getBackBtn() {
   return `
     <div class="action">
       <div class="action__back">${backIcon} </div>
-      <div class="action__star ">${starIcon} </div>
+      ${!isFavorite ? `<div class="action__star ">${starIcon} </div>` : ""}
 
 
     </div>
@@ -196,13 +200,12 @@ function handelBackClick() {
 
 function handelStarClick(city) {
   const starBtnEl = document.querySelector(".action__star");
-  starBtnEl.addEventListener("click", () => {
-    starBtnEl.classList.add("hidden");
-    const cities = getCityFromLocalStorag();
-    const cityName = city.location.name;
-    if (!cities.includes(cityName)) {
-      cities.push(cityName);
-    }
-    localStorage.setItem("cityName", JSON.stringify(cities));
-  });
+  if (starBtnEl) {
+    starBtnEl.addEventListener("click", () => {
+      starBtnEl.classList.add("hidden");
+      const cityName = city.location.name;
+      console.log(city);
+      setCityToLocalStorag(cityName);
+    });
+  }
 }

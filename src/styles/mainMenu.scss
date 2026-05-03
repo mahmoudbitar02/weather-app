@@ -44,13 +44,33 @@
 }
 
 .main-cards {
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+
+  width: 100%;
+  &__wrapper {
+    margin-top: 1rem;
+
+    gap: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__delete-btn {
+    width: 2.5rem;
+    color: red;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    height: 2rem;
+  }
 }
 
 .city-card {
+  width: 100%;
   @include card();
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("/weather-app/conditionImages/day/sunny.jpg");
   background-size: cover;
@@ -109,4 +129,8 @@
   &:last-child {
     border-bottom: 1px solid #fff;
   }
+}
+
+.hidden {
+  display: none;
 }

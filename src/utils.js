@@ -43,13 +43,3 @@ export function getState(data) {
   ];
   return stats;
 }
-
-export function getBackgroundStyle(data) {
-  const imagePath = getConditionImagePath(data.current.condition.code, !data.current.is_day);
-
-  return `
-    background: linear-gradient(0deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${imagePath});
-    background-size: cover;
-    background-position: center;
-  `;
-}

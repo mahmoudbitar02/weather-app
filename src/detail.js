@@ -8,7 +8,11 @@ import { formatTemperature, getDeutschlandTime, getState } from "./utils";
 
 export async function displayWeather(city) {
   showSpinner(`lade Wetter für ${city} ...`);
-  const data = await fetchWeatherForecastData(city);
+  const day = 3;
+  console.log(city);
+
+  const data = await fetchWeatherForecastData(city, day);
+  console.log(data);
   const conditionImage = getConditionImagePath(data.current.condition.code, !data.current.is_day);
   console.log(conditionImage);
   if (conditionImage) {
@@ -17,10 +21,10 @@ export async function displayWeather(city) {
   }
   getWeatherHTML(data);
   getTodayForcastHTML(data);
-  appendForecast3Days(data);
+  appendForecast3Days(data, day);
   renderMiniCard(data);
   handelBackClick();
-  handelStarClick(data);
+  handelStarClick(city);
 }
 
 function getTodayForcastHTML(data) {
@@ -131,8 +135,10 @@ function appendHourlyForecastToContainer(nextHours, forcastCondition, maxWindPer
   container.insertAdjacentHTML("beforeend", html);
 }
 
-function appendForecast3Days(data) {
-  const days = data.forecast.forecastday.slice(0, 3);
+function appendForecast3Days(data, d) {
+  const days = data.forecast.forecastday.slice(0, d);
+  console.log(days);
+
   console.log(days);
 
   const innerHtml = days
@@ -146,13 +152,13 @@ function appendForecast3Days(data) {
 
       return `
   
-    <div class="days-forecast-card">
-      <h3 class="days-forecast-card__title">${title}</h3>
-      <img src="https:${day.day.condition.icon}" alt="" class="days-forecast-card__icon" />
-      <span class="days-forecast-card__maxtemp">H:${formatTemperature(day.day.maxtemp_c)}</span>
-      <span class="days-forecast-card__mintemp">T:${formatTemperature(day.day.mintemp_c)}</span>
-      <p class="days-forecast-card__wind">${day.day.maxwind_kph} km/h</p>
-    </div>
+      <div class="days-forecast-card">
+        <h3 class="days-forecast-card__title">${title}</h3>
+        <img src="https:${day.day.condition.icon}" alt="" class="days-forecast-card__icon" />
+        <span class="days-forecast-card__maxtemp">H:${formatTemperature(day.day.maxtemp_c)}</span>
+        <span class="days-forecast-card__mintemp">T:${formatTemperature(day.day.mintemp_c)}</span>
+        <p class="days-forecast-card__wind">${day.day.maxwind_kph} km/h</p>
+      </div>
   
   `;
     })
@@ -160,7 +166,7 @@ function appendForecast3Days(data) {
 
   const html = `
     <div class="days-forecast">
-      <h3 class="days-forecast__title">Vorhersage für die nächsten 3 Tage</h3>
+      <h3 class="days-forecast__title">Vorhersage für die nächsten ${d} Tage</h3>
       ${innerHtml}
     </div>
   `;
@@ -199,11 +205,12 @@ function handelBackClick() {
 }
 
 function handelStarClick(city) {
+  console.log(city);
   const starBtnEl = document.querySelector(".action__star");
   if (starBtnEl) {
     starBtnEl.addEventListener("click", () => {
       starBtnEl.classList.add("hidden");
-      const cityName = city.location.name;
+      const cityName = city.id;
       console.log(city);
       setCityToLocalStorag(cityName);
     });

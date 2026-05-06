@@ -10,6 +10,7 @@
 }
 
 .main-header {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -72,9 +73,10 @@
 .city-card {
   width: 100%;
   @include card();
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("/weather-app/conditionImages/day/sunny.jpg");
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--condition-image);
   background-size: cover;
   background-position: center;
+
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 8.5rem;
@@ -121,13 +123,33 @@
     font-size: 2.5rem;
   }
 }
+.searchd-city {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 10;
+  background-color: #000;
+  border-radius: $border-radius;
+}
 
 .search-item {
+  width: 100%;
   padding: 1rem;
-  background-color: #000;
 
-  &:last-child {
-    border-bottom: 1px solid #fff;
+  display: flex;
+  gap: 0.5rem;
+
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  // &:last-child {
+  //   border-bottom: 1px solid #fff;
+  // }
+  &:hover {
+    background-color: #333;
+    box-shadow: $shadow;
   }
 }
 

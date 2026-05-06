@@ -1,10 +1,12 @@
 import { displayWeather } from "./detail";
 import { FetchSearchData, fetchWeatherForecastData } from "./fetching";
 import { showSpinner } from "./spinner";
-import { formatTemperature, getBackgroundStyle } from "./utils";
+import { formatTemperature } from "./utils";
 
 import { deleteCityFromLocalStorage, getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
 import { container } from "./main";
+import { getConditionImagePath } from "./conditions";
+import debounce from "debounce";
 
 document.addEventListener("click", (e) => getMainEls(e));
 document.addEventListener("click", (e) => searchedCity(e));
@@ -63,6 +65,9 @@ async function renderMainCards() {
   for (let city of favoriteCities) {
     const weatherData = await fetchWeatherForecastData(city, 1);
     const { location, current, forecast } = weatherData;
+    console.log(current.condition.code);
+    const conditionImage = getConditionImagePath(current.condition.code, !current.is_day);
+    console.log(conditionImage);
     const deleteIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -75,7 +80,7 @@ async function renderMainCards() {
       <button class="main-cards__delete-btn hidden" >${deleteIcon}</button>
       
 
-      <div class="city-card" data-city="${location.name}" style="${getBackgroundStyle(weatherData)}"> 
+      <div class="city-card" data-city="${location.name}" ${conditionImage ? `style="--condition-image: url(${conditionImage})"` : ""}> 
         <div class="city-card__left">
           <div class="city-card__left-main">
             <div class="city-card__title">${location.name}</div>
@@ -109,37 +114,34 @@ function getMainEls(e) {
   }
 }
 
-async function searchInput() {
-  const inputEl = document.querySelector(".main-header__search");
+async function handelSearch(e) {
   const searchContainer = document.querySelector(".search");
 
-  inputEl.addEventListener("input", async (e) => {
-    const inputCity = e.target.value.trim();
-    if (inputCity.length < 1) {
-      searchContainer.innerHTML = "";
-      return;
-    }
-    const results = await FetchSearchData(inputCity);
-    console.log(results);
-    console.log(results[0].id);
+  const inputCity = e.target.value.trim();
+  if (inputCity.length < 1) {
+    searchContainer.innerHTML = "";
+    return;
+  }
+  searchContainer.innerHTML = `Suche nach ${inputCity}...`;
+  const results = await FetchSearchData(inputCity);
+  renderSearchHtml(results);
+}
 
-    renderSearchHtml(results);
-  });
+async function searchInput() {
+  const inputEl = document.querySelector(".main-header__search");
+
+  inputEl.addEventListener("input", debounce(handelSearch, 500));
 }
 
 function renderSearchHtml(results) {
   const searchContainer = document.querySelector(".search");
   console.log(results);
 
-  const CityElements = [];
+  const cityElements = [];
 
-  if (results.length === 0) {
-    searchContainer.innerHTML = "<p>Keine Ergebnisse</p>";
-    return;
-  }
   const cityEl = results.forEach((city) => {
     const html = `
-     <div class="search-item" data-id="${city.id}" data-name="${city.name}"
+        <div class="search-item" data-id="${city.id}" data-name="${city.name}"
             data-lat="${city.lat}"
             data-lon="${city.lon}">
           <span class="search-item__city"> ${city.name},</span>
@@ -149,19 +151,17 @@ function renderSearchHtml(results) {
         </div>
    
     `;
-    CityElements.push(html);
+    cityElements.push(html);
   });
-  searchContainer.innerHTML = `<div class=searchd-city>${CityElements.join("")} </div>`;
+  searchContainer.innerHTML = `<div class=searchd-city>${cityElements.join("")} </div>`;
 }
 
 function searchedCity(e) {
   const cityEl = e.target.closest(".search-item");
   if (cityEl) {
-    const cityName = cityEl.dataset.name;
-
-    console.log(cityName);
-
-    displayWeather(cityName);
+    const cityId = cityEl.dataset.id;
+    console.log(cityId);
+    displayWeather(cityId);
   }
 }
 
@@ -183,9 +183,9 @@ function deleteCard(e) {
   const deleteBtn = e.target.closest(".main-cards__delete-btn");
   if (!deleteBtn) return;
   const card = deleteBtn.closest(".main-cards__wrapper");
-  const cityName = card.querySelector(".city-card").dataset.city;
-  console.log(cityName);
-  deleteCityFromLocalStorage(cityName);
-  renderMainHtml();
-  // console.log(deleteBtn);
+  const cityId = card.querySelector(".search-item").dataset.id;
+  console.log(cityId);
+  deleteCityFromLocalStorage(cityId);
+  deleteBtn.parentElement.remove();
+  // renderMainHtml();
 }

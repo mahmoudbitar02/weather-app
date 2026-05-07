@@ -63,6 +63,7 @@ async function renderMainCards() {
   const allCitiesElement = [];
 
   for (let city of favoriteCities) {
+    console.log("city id " + city);
     const weatherData = await fetchWeatherForecastData(city, 1);
     const { location, current, forecast } = weatherData;
     console.log(current.condition.code);
@@ -80,7 +81,7 @@ async function renderMainCards() {
       <button class="main-cards__delete-btn hidden" >${deleteIcon}</button>
       
 
-      <div class="city-card" data-city="${location.name}" ${conditionImage ? `style="--condition-image: url(${conditionImage})"` : ""}> 
+      <div class="city-card" data-id="${city}" ${conditionImage ? `style="--condition-image: url(${conditionImage})"` : ""}> 
         <div class="city-card__left">
           <div class="city-card__left-main">
             <div class="city-card__title">${location.name}</div>
@@ -108,7 +109,7 @@ async function renderMainCards() {
 function getMainEls(e) {
   const card = e.target.closest(".city-card");
   if (card) {
-    const city = card.dataset.city;
+    const city = card.dataset.id;
 
     displayWeather(city);
   }
@@ -183,9 +184,9 @@ function deleteCard(e) {
   const deleteBtn = e.target.closest(".main-cards__delete-btn");
   if (!deleteBtn) return;
   const card = deleteBtn.closest(".main-cards__wrapper");
-  const cityId = card.querySelector(".search-item").dataset.id;
+  const cityId = card.querySelector(".city-card").dataset.id;
   console.log(cityId);
   deleteCityFromLocalStorage(cityId);
-  deleteBtn.parentElement.remove();
+  card.remove();
   // renderMainHtml();
 }

@@ -19,7 +19,7 @@ export async function displayWeather(city) {
     container.style = `--detail-condition-image: url(${conditionImage})`;
     container.classList.add("show-background");
   }
-  getWeatherHTML(data);
+  getWeatherHTML(data, city);
   getTodayForcastHTML(data);
   appendForecast3Days(data, day);
   renderMiniCard(data);
@@ -51,7 +51,7 @@ function getTodayForcastHTML(data) {
   appendHourlyForecastToContainer(nextHours, forcastCondition, maxWindPerKm);
 }
 
-function getWeatherHTML(data) {
+function getWeatherHTML(data, city) {
   const forcast = data.forecast.forecastday[0];
   const html = `
     <div class="city">
@@ -65,7 +65,7 @@ function getWeatherHTML(data) {
     </div>
     
   `;
-  const isFavorite = getCityFromLocalStorag().find((city) => city === data.location.name);
+  const isFavorite = getCityFromLocalStorag().find((id) => id === city);
   container.innerHTML = getBackBtn(isFavorite) + html;
 }
 
@@ -204,15 +204,14 @@ function handelBackClick() {
   });
 }
 
-function handelStarClick(city) {
-  console.log(city);
+function handelStarClick(cityID) {
+  console.log(cityID);
   const starBtnEl = document.querySelector(".action__star");
   if (starBtnEl) {
     starBtnEl.addEventListener("click", () => {
       starBtnEl.classList.add("hidden");
-      const cityName = city.id;
-      console.log(city);
-      setCityToLocalStorag(cityName);
+
+      setCityToLocalStorag(cityID);
     });
   }
 }

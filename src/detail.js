@@ -6,8 +6,8 @@ import { showSpinner } from "./spinner";
 import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
 import { formatTemperature, getDeutschlandTime, getState } from "./utils";
 
-export async function displayWeather(city) {
-  showSpinner(`lade Wetter für ${city} ...`);
+export async function displayWeather(city, cityName) {
+  showSpinner(`lade Wetter für ${cityName} ...`);
   const day = 3;
   console.log(city);
 

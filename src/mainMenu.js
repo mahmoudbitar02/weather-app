@@ -57,7 +57,7 @@ async function renderMainCards() {
   let favoriteCities = getCityFromLocalStorag();
 
   if (!favoriteCities || favoriteCities.length < 1) {
-    return "Noch keine Favoriten gespeichert";
+    return "<p>Noch keine Favoriten gespeichert</p>";
   }
 
   const allCitiesElement = [];
@@ -81,7 +81,7 @@ async function renderMainCards() {
       <button class="main-cards__delete-btn hidden" >${deleteIcon}</button>
       
 
-      <div class="city-card" data-id="${city}" ${conditionImage ? `style="--condition-image: url(${conditionImage})"` : ""}> 
+      <div class="city-card"  data-id="${city}" data-name="${location.name}" ${conditionImage ? `style="--condition-image: url(${conditionImage})"` : ""}> 
         <div class="city-card__left">
           <div class="city-card__left-main">
             <div class="city-card__title">${location.name}</div>
@@ -110,8 +110,10 @@ function getMainEls(e) {
   const card = e.target.closest(".city-card");
   if (card) {
     const city = card.dataset.id;
+    const cityName = card.dataset.name;
+    console.log(cityName);
 
-    displayWeather(city);
+    displayWeather(city, cityName);
   }
 }
 

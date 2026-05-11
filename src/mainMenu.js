@@ -11,6 +11,7 @@ import debounce from "debounce";
 document.addEventListener("click", (e) => getMainEls(e));
 document.addEventListener("click", (e) => searchedCity(e));
 document.addEventListener("click", (e) => deleteCard(e));
+document.addEventListener("click", handelBodyClick);
 
 export function renderMainHtml() {
   container.classList.remove("show-background");
@@ -125,6 +126,7 @@ async function handelSearch(e) {
     searchContainer.innerHTML = "";
     return;
   }
+
   searchContainer.innerHTML = `Suche nach ${inputCity}...`;
   const results = await FetchSearchData(inputCity);
   renderSearchHtml(results);
@@ -132,12 +134,29 @@ async function handelSearch(e) {
 
 async function searchInput() {
   const inputEl = document.querySelector(".main-header__search");
+  const searchContainer = document.querySelector(".search");
+
+  inputEl.addEventListener("focus", () => {
+    searchContainer.classList.remove("search--hidden");
+  });
 
   inputEl.addEventListener("input", debounce(handelSearch, 500));
 }
 
+function handelBodyClick(e) {
+  const searchContainer = document.querySelector(".search");
+
+  if (!searchContainer) return;
+  if (searchContainer.contains(e.target) || e.target.closest(".main-header__search")) {
+    return;
+  }
+  searchContainer.classList.add("search--hidden");
+}
+
 function renderSearchHtml(results) {
   const searchContainer = document.querySelector(".search");
+  const searchInput = document.querySelector(".main-header__search");
+
   console.log(results);
 
   const cityElements = [];
@@ -156,6 +175,7 @@ function renderSearchHtml(results) {
     `;
     cityElements.push(html);
   });
+
   searchContainer.innerHTML = `<div class=searchd-city>${cityElements.join("")} </div>`;
 }
 
@@ -190,5 +210,4 @@ function deleteCard(e) {
   console.log(cityId);
   deleteCityFromLocalStorage(cityId);
   card.remove();
-  // renderMainHtml();
 }

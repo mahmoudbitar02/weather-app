@@ -36,6 +36,7 @@
   }
 
   &__search {
+    position: relative;
     height: 2.3rem;
     border-radius: $border-radius;
     padding: 0.3rem;
@@ -123,6 +124,13 @@
     font-size: 2.5rem;
   }
 }
+
+.search {
+  &--hidden {
+    display: none;
+  }
+}
+
 .searchd-city {
   position: absolute;
   width: 100%;

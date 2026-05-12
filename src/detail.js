@@ -4,21 +4,20 @@ import { container } from "./main";
 import { renderMainHtml } from "./mainMenu";
 import { showSpinner } from "./spinner";
 import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
-import { formatTemperature, getDeutschlandTime, getState } from "./utils";
+import { formatTemperature, getDeutschlandTime, getWeatherStats } from "./utils";
 
 export async function displayWeather(city, cityName) {
   showSpinner(`lade Wetter für ${cityName} ...`);
   const day = 3;
-  console.log(city);
-
   const data = await fetchWeatherForecastData(city, day);
-  console.log(data);
+
   const conditionImage = getConditionImagePath(data.current.condition.code, !data.current.is_day);
-  console.log(conditionImage);
+
   if (conditionImage) {
     container.style = `--detail-condition-image: url(${conditionImage})`;
     container.classList.add("show-background");
   }
+
   getWeatherHTML(data, city);
   getTodayForcastHTML(data);
   appendForecast3Days(data, day);
@@ -28,13 +27,10 @@ export async function displayWeather(city, cityName) {
 }
 
 function getTodayForcastHTML(data) {
-  console.log("hallo " + data.location.name);
-
   const now = new Date(data.location.localtime);
   const forecastDayOne = data.forecast.forecastday[0].hour;
   const forecastDayTwo = data.forecast.forecastday[1].hour;
 
-  // Data day 1
   const forcastCondition = data.forecast.forecastday[0].day.condition.text;
   const maxWindPerKm = data.forecast.forecastday[0].day.maxwind_kph;
 
@@ -66,10 +62,10 @@ function getWeatherHTML(data, city) {
     
   `;
   const isFavorite = getCityFromLocalStorag().find((id) => id === city);
-  container.innerHTML = getBackBtn(isFavorite) + html;
+  container.innerHTML = createActionButtons(isFavorite) + html;
 }
 
-function getBackBtn(isFavorite = false) {
+function createActionButtons(isFavorite = false) {
   const backIcon = `
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -85,8 +81,6 @@ function getBackBtn(isFavorite = false) {
     <div class="action">
       <div class="action__back">${backIcon} </div>
       ${!isFavorite ? `<div class="action__star ">${starIcon} </div>` : ""}
-
-
     </div>
   `;
 }
@@ -104,7 +98,6 @@ function renderHoursAndTemp(hour, temp, icon) {
 
 function renderTodayForcastHeader(condition, maxWind) {
   return `
-  
     <div class="today-forcast__header">
       <span class="today-forcast__condation">Heute ${condition}.</span>
       <span class="today-forcast__wind">Wind bis zu ${maxWind} km/h</span>
@@ -135,11 +128,8 @@ function appendHourlyForecastToContainer(nextHours, forcastCondition, maxWindPer
   container.insertAdjacentHTML("beforeend", html);
 }
 
-function appendForecast3Days(data, d) {
-  const days = data.forecast.forecastday.slice(0, d);
-  console.log(days);
-
-  console.log(days);
+function appendForecast3Days(data, day) {
+  const days = data.forecast.forecastday.slice(0, day);
 
   const innerHtml = days
     .map((day, index) => {
@@ -151,22 +141,21 @@ function appendForecast3Days(data, d) {
             });
 
       return `
+        <div class="days-forecast-card">
+          <h3 class="days-forecast-card__title">${title}</h3>
+          <img src="https:${day.day.condition.icon}" alt="" class="days-forecast-card__icon" />
+          <span class="days-forecast-card__maxtemp">H:${formatTemperature(day.day.maxtemp_c)}</span>
+          <span class="days-forecast-card__mintemp">T:${formatTemperature(day.day.mintemp_c)}</span>
+          <p class="days-forecast-card__wind">${day.day.maxwind_kph} km/h</p>
+        </div>
   
-      <div class="days-forecast-card">
-        <h3 class="days-forecast-card__title">${title}</h3>
-        <img src="https:${day.day.condition.icon}" alt="" class="days-forecast-card__icon" />
-        <span class="days-forecast-card__maxtemp">H:${formatTemperature(day.day.maxtemp_c)}</span>
-        <span class="days-forecast-card__mintemp">T:${formatTemperature(day.day.mintemp_c)}</span>
-        <p class="days-forecast-card__wind">${day.day.maxwind_kph} km/h</p>
-      </div>
-  
-  `;
+      `;
     })
     .join("");
 
   const html = `
     <div class="days-forecast">
-      <h3 class="days-forecast__title">Vorhersage für die nächsten ${d} Tage</h3>
+      <h3 class="days-forecast__title">Vorhersage für die nächsten ${day} Tage</h3>
       ${innerHtml}
     </div>
   `;
@@ -175,7 +164,7 @@ function appendForecast3Days(data, d) {
 }
 
 function renderMiniCard(data) {
-  const weiterStatistic = getState(data)
+  const weiterStatistic = getWeatherStats(data)
     .map((state) => {
       return `
       <div class="mini-card-item">
@@ -187,9 +176,9 @@ function renderMiniCard(data) {
     .join("");
 
   const html = `
-    <div class="mini-card">
-    ${weiterStatistic}
-    </div>
+      <div class="mini-card">
+        ${weiterStatistic}
+      </div>
     `;
 
   container.insertAdjacentHTML("beforeend", html);
@@ -205,12 +194,10 @@ function handelBackClick() {
 }
 
 function handelStarClick(cityID) {
-  console.log(cityID);
   const starBtnEl = document.querySelector(".action__star");
   if (starBtnEl) {
     starBtnEl.addEventListener("click", () => {
       starBtnEl.classList.add("hidden");
-
       setCityToLocalStorag(cityID);
     });
   }

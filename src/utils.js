@@ -13,7 +13,7 @@ export function getDeutschlandTime(date, time) {
   });
 }
 
-export function getState(data) {
+export function getWeatherStats(data) {
   const currentDate = data.forecast.forecastday[0].date;
   const stats = [
     {

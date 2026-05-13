@@ -4,7 +4,7 @@ import { container } from "./main";
 import { renderMainHtml } from "./mainMenu";
 import { showSpinner } from "./spinner";
 import { getCityFromLocalStorag, setCityToLocalStorag } from "./storage";
-import { formatTemperature, getDeutschlandTime, getWeatherStats } from "./utils";
+import { formatTemperature, getWeatherStats } from "./utils";
 
 export async function displayWeather(city, cityName) {
   showSpinner(`lade Wetter für ${cityName} ...`);

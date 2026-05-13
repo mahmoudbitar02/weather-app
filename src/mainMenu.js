@@ -9,6 +9,11 @@ import { getConditionImagePath } from "./conditions";
 import debounce from "debounce";
 
 function registerEventListeners() {
+  document.removeEventListener("click", showCityDetails);
+  document.removeEventListener("click", searchedCity);
+  document.removeEventListener("click", deleteCard);
+  document.removeEventListener("click", handelBodyClick);
+
   document.addEventListener("click", showCityDetails);
   document.addEventListener("click", searchedCity);
   document.addEventListener("click", deleteCard);
@@ -63,6 +68,7 @@ async function renderMainCards() {
   for (let city of favoriteCities) {
     const weatherData = await fetchWeatherForecastData(city, 1);
     const { location, current, forecast } = weatherData;
+    console.log(forecast.forecastday[0].hour);
 
     const conditionImage = getConditionImagePath(current.condition.code, !current.is_day);
 
@@ -84,7 +90,7 @@ async function renderMainCards() {
           <div class="city-card__condition">${current.condition.text}</div>
         </div>
         <div class="city-card__right">
-          <div class="city-card__temp">${formatTemperature(forecast.forecastday[0].day.maxtemp_c)}</div>
+          <div class="city-card__temp">${formatTemperature(current.temp_c)}</div>
           <div class="city-card__temps">
             <span class="city-card__temp-heigt">H:${formatTemperature(forecast.forecastday[0].day.maxtemp_c)}</span>
             <span class="city-card__temp-low">T:${formatTemperature(forecast.forecastday[0].day.mintemp_c)}</span>
@@ -147,21 +153,16 @@ function handelBodyClick(e) {
 
 function renderSearchHtml(results) {
   const searchContainer = document.querySelector(".main-header__search-results");
-  const searchInput = document.querySelector(".main-header__search");
-  const cityElements = [];
 
-  const cityEl = results.forEach((city) => {
-    const html = `
-        <div class="searched-city-item" data-id="${city.id}" data-name="${city.name}"
-            data-lat="${city.lat}"
-            data-lon="${city.lon}">
+  const cityElements = results.map((city) => {
+    return `
+        <div class="searched-city-item" data-id="${city.id}" data-name="${city.name}">
           <span class="searched-city-item__city"> ${city.name},</span>
           <span class="searched-city-item__city"> ${city.country},</span>
           <span class="searched-city-item__city"> ${city.region}</span>
 
         </div>
     `;
-    cityElements.push(html);
   });
 
   searchContainer.innerHTML = `<div class="search__searched-city">${cityElements.join("")} </div>`;
@@ -171,7 +172,7 @@ function searchedCity(e) {
   const cityEl = e.target.closest(".searched-city-item");
   if (cityEl) {
     const cityId = cityEl.dataset.id;
-    displayWeather(cityId);
+    displayWeather(cityId, cityEl.dataset.name);
   }
 }
 

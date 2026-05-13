@@ -4,7 +4,7 @@ const KEY = API_KEY;
 const BASE_URL = "https://api.weatherapi.com/v1";
 
 export async function fetchWeatherForecastData(city, day) {
-  const response = await fetch(`${BASE_URL}/forecast.json?key=${KEY}&q=id:${city}&lang=de&days=${day}`);
+  const response = await fetch(`${BASE_URL}/forecast.json?key=${KEY}&q=id:${city}&lang=de&lang=ar&days=${day}`);
   const data = await response.json();
   return data;
 }
